@@ -1,0 +1,42 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (C) 2026 Johan Alvarado
+
+base_url = "/"
+
+title = "c127.dev"
+
+description = "Linux kernel and embedded networking engineer. Drivers, firmware, OpenWrt board bring-up. Upstream contributor."
+
+compile_sass = true
+
+minify_html = true
+
+author = "Johan Alvarado"
+
+build_search_index = true
+
+generate_feeds = true
+feed_filenames = ["atom.xml"]
+
+taxonomies = [
+  { name = "tags", feed = false },
+]
+
+[link_checker]
+skip_prefixes = ["https://www.svgrepo.com"]
+
+skip_anchor_prefixes = ["https://github.com/"]
+
+[markdown]
+# No lazy_async_image: breaks heading ids in 0.21. build.sh adds it instead.
+
+highlight_code = true
+
+highlight_theme = "css"
+
+highlight_themes_css = [
+  { theme = "nord", filename = "syntax-dark.css" },
+  { theme = "base16-ocean-light", filename = "syntax-light.css" },
+]
+
+[extra]
