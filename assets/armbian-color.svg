@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later | Copyright (C) 2026 Johan Alvarado -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ns1="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" width="552" height="552" viewBox="0 0 552 552"><g transform="scale(1.666666667)"><g id="logo"><defs />
+<g id="group0" transform="matrix(0.6 0 0 0.6 0 0)" fill="none">
+  <path id="shape0" transform="translate(24, 50)" fill="#000000" stroke-opacity="0" stroke="#000000" stroke-width="0" stroke-linecap="square" stroke-linejoin="bevel" d="M200 0L307 0L507 445L428 445C407 445 397 436 390 420L261 122C258 115 249 115 246 122L115 420C108 436 98 445 77 445L0 445Z" ns1:nodetypes="ccccccccccc" />
+  <path id="shape1" transform="translate(210, 358)" fill="#ff0000" stroke-opacity="0" stroke="#000000" stroke-width="0" stroke-linecap="square" stroke-linejoin="bevel" d="M0 0L132 0L66 134Z" ns1:nodetypes="cccc" />
+ </g>
+</g></g></svg>
