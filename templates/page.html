@@ -1,0 +1,26 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later | Copyright (C) 2026 Johan Alvarado #}
+{% extends "base.html" %}
+{% import "macros.html" as macros %}
+
+{% block content %}
+<article>
+    <h1>{{ page.title }}</h1>
+    {% set_global author = config.author | default(value="") %}
+    {% if page.authors | length > 0 %}{% set_global author = page.authors | first %}{% endif %}
+    <div class="byline">
+        {% if author %}
+        <address class="byline-author"><a href="/about-me/" rel="author">{{ author }}</a></address>
+        <span class="byline-sep" aria-hidden="true">&middot;</span>
+        {% endif %}
+        <time datetime="{{ page.date }}">{{ page.date | date(format="%B %-d, %Y") }}</time>
+    </div>
+    {% if page.toc | length > 0 %}
+    <nav class="toc" aria-labelledby="toc-label">
+        <p class="toc-label" id="toc-label">Table of Content</p>
+        {{ macros::toc_list(items=page.toc) }}
+    </nav>
+    {% endif %}
+    {{ page.content | safe }}
+    {{ macros::tag_list(items=page.taxonomies.tags | default(value=[])) }}
+</article>
+{% endblock content %}

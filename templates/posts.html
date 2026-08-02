@@ -1,0 +1,47 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later | Copyright (C) 2026 Johan Alvarado #}
+{% extends "base.html" %}
+{% import "macros.html" as macros %}
+
+{% block content %}
+{% set tags = get_taxonomy(kind="tags") %}
+<div class="page-head">
+    <h1>{{ section.title }}</h1>
+    {% if tags.items | length > 0 %}
+    <div class="tag-filter">
+        <button class="filter-toggle" type="button" aria-expanded="false" aria-controls="tag-panel" title="Filter by tag">
+            <span class="visually-hidden">Filter by tag</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 5h16l-6 7.4V19l-4-2.2v-4.4z"/>
+            </svg>
+        </button>
+        <nav class="tag-panel" id="tag-panel" aria-label="Filter by tag">
+            <form class="tag-search" role="search">
+                <label class="visually-hidden" for="tag-query">Tag name</label>
+                <input class="tag-query" id="tag-query" type="search" placeholder="Find a tag"
+                       autocomplete="off" autocapitalize="off" spellcheck="false"
+                       aria-controls="tag-suggestions">
+                <button class="tag-go" type="submit" disabled title="Go to tag">
+                    <span class="visually-hidden">Go to tag</span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M5 12h12M12.5 6.5 18 12l-5.5 5.5"/>
+                    </svg>
+                </button>
+            </form>
+            <ul class="tag-list tag-list--panel" id="tag-suggestions">
+            {% for term in tags.items %}
+                <li>
+                    <a class="tag" data-tag="{{ term.name }}" href="{{ term.path | safe }}">{{ term.name }}<span class="tag-count">{{ term.page_count }}</span></a>
+                </li>
+            {% endfor %}
+            </ul>
+            <p class="tag-empty" role="status" hidden>No tag matches.</p>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+<div class="tagline">{{ section.content | safe }}</div>
+
+<ul class="post-list">
+{% for page in section.pages %}{{ macros::post_item(page=page, show_tags=true) }}{% endfor %}
+</ul>
+{% endblock content %}

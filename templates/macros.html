@@ -1,0 +1,43 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later | Copyright (C) 2026 Johan Alvarado #}
+{% macro post_item(page, show_tags=false) %}
+{% set tags = page.taxonomies.tags | default(value=[]) %}
+{% set has_tags = show_tags and tags | length > 0 %}
+<li class="post-item">
+    <div class="post-row">
+        {% if has_tags %}
+        <button class="tag-toggle" type="button" aria-expanded="false" aria-controls="tags-{{ page.slug }}">
+            <span class="visually-hidden">Tags for {{ page.title }}</span>
+            <span aria-hidden="true">#</span>
+        </button>
+        {% endif %}
+        <a href="{{ page.path | safe }}">
+            <span class="post-title">{{ page.title }}</span>
+            <span class="post-date">{{ page.date | date(format="%Y-%m-%d") }}</span>
+        </a>
+    </div>
+    {% if has_tags %}
+    <div class="tag-card" id="tags-{{ page.slug }}">{{ self::tag_list(items=tags) }}</div>
+    {% endif %}
+</li>
+{% endmacro post_item %}
+
+{% macro toc_list(items) %}
+<ul class="toc-list">
+    {% for item in items %}
+    <li>
+        <a href="#{{ item.id }}">{{ item.title }}</a>
+        {% if item.children | length > 0 %}{{ self::toc_list(items=item.children) }}{% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endmacro toc_list %}
+
+{% macro tag_list(items) %}
+{% if items | length > 0 %}
+<ul class="tag-list">
+    {% for tag in items %}
+    <li><a class="tag" href="{{ get_taxonomy_url(kind='tags', name=tag) | safe }}">{{ tag }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endmacro tag_list %}

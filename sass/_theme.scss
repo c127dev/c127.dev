@@ -1,0 +1,29 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Johan Alvarado
+
+:root {
+    color-scheme: dark;
+
+    --bg:      #111113;
+    --surface: #17171a;
+    --border:  #26262b;
+    --fg:      #d4d4d8;
+    --heading: #fafafa;
+    --muted:   #8a8a93;   // 5.6:1 on --bg
+    --accent:  #a1a1aa;
+
+    --overlay: rgba(0, 0, 0, 0.94);
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+
+    --bg:      #ffffff;
+    --surface: #f6f6f7;
+    --border:  #e4e4e7;
+    --fg:      #3f3f46;
+    --heading: #18181b;
+    --muted:   #71717a;   // 4.9:1 on --bg
+    --accent:  #52525b;
+    --overlay: rgba(0, 0, 0, 0.88);
+}
