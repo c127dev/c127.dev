@@ -1,0 +1,17 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later | Copyright (C) 2026 Johan Alvarado #}
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Tags</h1>
+<div class="tagline">What the posts are about.</div>
+
+<ul class="tag-list tag-list--index">
+{% for term in terms %}
+    <li>
+        <a class="tag" href="{{ term.path | safe }}">{{ term.name }}<span class="tag-count">{{ term.page_count }}</span></a>
+    </li>
+{% endfor %}
+</ul>
+
+<p class="post-more"><a class="button" href="/posts/">All posts</a></p>
+{% endblock content %}
