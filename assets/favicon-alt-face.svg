@@ -1,0 +1,10 @@
+<!-- SPDX-License-Identifier: AGPL-3.0-or-later | Copyright (C) 2026 Johan Alvarado -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="7" fill="#111113"/>
+  <g fill="none" stroke="#fafafa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6.4 13.2 L9.4 9.4 L12.4 13.2"/>
+    <path d="M19.6 13.2 L22.6 9.4 L25.6 13.2"/>
+  </g>
+  <path d="M19.64 17.73 A 4.4 4.4 0 1 0 19.64 24.27"
+        fill="none" stroke="#fafafa" stroke-width="3" stroke-linecap="round"/>
+</svg>
