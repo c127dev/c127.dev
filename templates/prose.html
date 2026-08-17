@@ -1,0 +1,9 @@
+{# SPDX-License-Identifier: AGPL-3.0-or-later | Copyright (C) 2026 Johan Alvarado #}
+{% extends "base.html" %}
+
+{% block content %}
+<article>
+    <h1>{{ section.title }}</h1>
+    {{ section.content | safe }}
+</article>
+{% endblock content %}
