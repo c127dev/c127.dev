@@ -1,0 +1,22 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (C) 2026 Johan Alvarado
+{
+  // No "main": assets-only, so requests never hit the metered Worker.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "c127static",
+  "compatibility_date": "2026-08-17",
+
+  "routes": [
+    { "pattern": "www.c127.dev", "custom_domain": true }
+  ],
+
+  "workers_dev": false,
+
+  "assets": {
+    "directory": "./public/",
+
+    "not_found_handling": "404-page",
+
+    "html_handling": "auto-trailing-slash"
+  }
+}

@@ -6,6 +6,7 @@
 #   ./build.sh serve        dev server with live reload on :1111
 #   ./build.sh check        validate links, write nothing
 #   ./build.sh clean        remove public/ and dist/
+#   ./build.sh deploy       build for SITE_URL, publish to Cloudflare Workers
 #
 #   BASE_URL=https://example.com ./build.sh   absolute URLs in sitemap/feed
 #   MINIFY=0 ./build.sh                       skip CSS/JS minification
@@ -15,9 +16,13 @@ set -euo pipefail
 ZOLA_IMAGE="${ZOLA_IMAGE:-ghcr.io/getzola/zola:v0.21.0}"
 ZIP_IMAGE="${ZIP_IMAGE:-docker.io/library/alpine:3.21}"
 MINIFY_IMAGE="${MINIFY_IMAGE:-docker.io/tdewolff/minify:v2.24.14}"
+WRANGLER_IMAGE="${WRANGLER_IMAGE:-docker.io/library/node:22-alpine}"
+WRANGLER_VERSION="${WRANGLER_VERSION:-4.123.0}"
 CONTAINER_NAME="zola-dev"
 PORT="${PORT:-1111}"
 LIVERELOAD_PORT="${LIVERELOAD_PORT:-1024}"
+
+SITE_URL="${SITE_URL:-https://www.c127.dev}"
 
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 DIST="$ROOT/dist"
@@ -31,6 +36,43 @@ die() { printf '\033[0;31merror:\033[0m %s\n' "$*" >&2; exit 1; }
 command -v podman >/dev/null || die "podman not found"
 
 zola() { podman run --rm -v "$MOUNT" -w /app "$ZOLA_IMAGE" "$@"; }
+
+load_env() {
+    [[ -f "$ROOT/.env" ]] || return 0
+
+    local mode
+    mode="$(stat -c '%a' "$ROOT/.env")"
+    [[ "$mode" == "600" ]] || log "warning: .env is mode $mode, want 600"
+
+    set -a
+    # shellcheck source=/dev/null
+    . "$ROOT/.env"
+    set +a
+}
+
+WRANGLER_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/c127.dev/wrangler"
+
+wrangler() {
+    mkdir -p "$WRANGLER_CACHE/npm" "$WRANGLER_CACHE/state"
+
+    local -a run=(
+        --rm -i
+        -v "$MOUNT"
+        -w /app
+        -v "$WRANGLER_CACHE/npm:/root/.npm:z"
+        -v "$WRANGLER_CACHE/state:/root/.config:z"
+    )
+
+    [[ -t 0 ]] && run+=(-t)
+
+    local var
+    for var in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID; do
+        [[ -n "${!var:-}" ]] && run+=(-e "$var")
+    done
+
+    podman run "${run[@]}" "$WRANGLER_IMAGE" \
+        npx --yes "wrangler@$WRANGLER_VERSION" "$@"
+}
 
 # Not markdown.lazy_async_image: in Zola 0.21 it blanks every heading id.
 lazy_img() {
@@ -135,13 +177,28 @@ cmd_clean() {
     rm -rf "$ROOT/public" "$DIST"
 }
 
+cmd_deploy() {
+    [[ -f "$ROOT/wrangler.jsonc" ]] || die "wrangler.jsonc not found"
+
+    load_env
+    [[ -n "${CLOUDFLARE_API_TOKEN:-}" ]] || die \
+        "CLOUDFLARE_API_TOKEN is not set - put it in .env (mode 600) or export it"
+
+    export BASE_URL="${BASE_URL:-$SITE_URL}"
+    cmd_build
+
+    log "deploying $BASE_URL"
+    wrangler deploy
+}
+
 case "${1:-build}" in
     build)  cmd_build ;;
     serve)  cmd_serve ;;
     check)  cmd_check ;;
     clean)  cmd_clean ;;
+    deploy) cmd_deploy ;;
     -h|--help|help)
         awk 'NR>4 { if (!/^#/) exit; sub(/^# ?/, ""); print }' "${BASH_SOURCE[0]}"
         ;;
-    *) die "unknown command: $1 (try: build, serve, check, clean)" ;;
+    *) die "unknown command: $1 (try: build, serve, check, clean, deploy)" ;;
 esac

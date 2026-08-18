@@ -3,4 +3,6 @@ public/
 dist/
 static/syntax-*.css
 
+.env
+
 .scrub.*
